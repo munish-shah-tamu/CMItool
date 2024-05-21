@@ -86,49 +86,72 @@
 
 
 
-import gspread
-from google.oauth2.service_account import Credentials
+import pandas as pd
 
-def authenticate_gspread():
+def read_all_sheets(filepath):
     """
-    Authenticate with Google Sheets using Google Auth.
-    """
-    scope = [
-        "https://www.googleapis.com/auth/spreadsheets.readonly",
-        "https://www.googleapis.com/auth/drive.file"
-    ]
-    creds = Credentials.from_service_account_file('path_to_your_service_account_file.json', scopes=scope)
-    client = gspread.authorize(creds)
-    return client
+    Reads an Excel file and returns a dictionary with sheet names as keys and the corresponding DataFrames as values.
 
-def read_google_sheet(sheet_url):
-    """
-    Read data from a Google Sheet given a shareable link and return as a list of dictionaries for each sheet.
-    
     Args:
-        sheet_url (str): URL to the shared Google Sheet.
+        filepath (str): The path to the Excel file.
     
     Returns:
-        dict: A dictionary where each key is a sheet name and the value is the list of records.
+        dict: A dictionary containing all sheets in the Excel file.
     """
-    client = authenticate_gspread()
-    
-    # Open the Google Sheet using its URL
-    sheet = client.open_by_url(sheet_url)
+    # Load the Excel file
+    xls = pd.ExcelFile(filepath)
 
-    sheets_data = {}
-    # Loop through each worksheet in the spreadsheet
-    for worksheet in sheet.worksheets():
-        records = worksheet.get_all_records()
-        sheets_data[worksheet.title] = records
+    # Dictionary to store DataFrames, one for each sheet
+    sheets_dict = {}
 
-    return sheets_data
+    # Iterate through all the sheets in the file
+    for sheet_name in xls.sheet_names:
+        # Load each sheet into a DataFrame
+        df = pd.read_excel(xls, sheet_name=sheet_name)
+        # Store the DataFrame in the dictionary
+        sheets_dict[sheet_name] = df
 
-# Example usage
+    return sheets_dict
+
+# Example usage:
 if __name__ == "__main__":
-    sheet_url = "https://docs.google.com/spreadsheets/d/1o8NjfYWiQTzU78IjoGepu133yx2lxFex/edit?usp=sharing&ouid=107245739744795459088&rtpof=true&sd=true"  # Replace with your actual URL
-    data = read_google_sheet(sheet_url)
-    print(data)
+    file_path = 'System Data Authoring_Oct 2023.xlsx'  # Update this path to the location of your Excel file
+    all_sheets = read_all_sheets(file_path)
+    
+    # Print each sheet's data
+    for sheet_name, data in all_sheets.items():
+        print(f"Data from sheet: {sheet_name}")
+        # print(data)
+        
+    # # Assuming the seventh sheet is what you want to access
+    # seventh_sheet_name = all_sheets[list(all_sheets.keys())[6]]  # Get the name of the seventh sheet
+
+    # # Access the 'BOT name' column from the seventh sheet
+    # bot_name_column = seventh_sheet_name['BOT name']
+    
+    # # Print the 'BOT name' column data
+    # print("Data from the 'BOT name' column in the seventh sheet:")
+    # print(bot_name_column)
+
+    # Access the seventh sheet by index, ensuring at least seven sheets exist
+    if len(all_sheets.keys()) >= 7:
+        seventh_sheet_name = list(all_sheets.keys())[6]  # Get the name of the seventh sheet
+        seventh_sheet_data = all_sheets[seventh_sheet_name]  # Access the seventh sheet's DataFrame
+    
+        # Print the entire DataFrame for the seventh sheet
+        print(f"Complete data from the seventh sheet ({seventh_sheet_name}):")
+        print(seventh_sheet_data)
+        
+        # Access and print the second column from the seventh sheet's DataFrame
+        if seventh_sheet_data.shape[1] >= 2:  # Ensure there are at least two columns
+            second_column_data = seventh_sheet_data.iloc[:, 0]  # iloc[:, 1] accesses the second column
+            print(f"Data from the second column of the seventh sheet ({seventh_sheet_name}):")
+            print(second_column_data)
+        else:
+            print("The seventh sheet does not have a second column.")
+    else:
+        print("There are less than seven sheets in the workbook.")
+
 
 
 # https://docs.google.com/spreadsheets/d/1o8NjfYWiQTzU78IjoGepu133yx2lxFex/edit?usp=sharing&ouid=107245739744795459088&rtpof=true&sd=true
