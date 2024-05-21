@@ -134,3 +134,5 @@ if __name__ == "__main__":
 # https://docs.google.com/spreadsheets/d/1o8NjfYWiQTzU78IjoGepu133yx2lxFex/edit?usp=sharing&ouid=107245739744795459088&rtpof=true&sd=true
 
 
+# CLI
+# <BOT/POD/EAT...> 
