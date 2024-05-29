@@ -2,58 +2,7 @@ import pandas as pd
 from ModelRepresentation import BotMetadata, PodMetadata, EatMetadata, DmMetadata, BartMetadata
 from SheetParser import parse_excel_sheets
 
-# def create_bot_objects_from_excel(file_path):
-#     sheets = parse_excel_sheets(file_path)
-#     bots = {}
 
-#     for sheet_name, df in sheets.items():
-#         for _, row in df.iterrows():
-#             # Identify Bot data
-#             bot_name = row.get('BOT Name')
-#             if pd.notna(bot_name):
-#                 bot_name = str(bot_name)
-#                 if bot_name not in bots:
-#                     bots[bot_name] = BotMetadata(
-#                         sysType=row.get('BOT SysType', 0),
-#                         description=row.get('Description', ''),
-#                         botName=bot_name,
-#                         botId=row.get('BOT ID', ''),
-#                         botType=row.get('BOT Type', ''),
-#                         botIndex=row.get('BOT Index', ''),
-#                         botDescription=row.get('BOT Description', ''),
-#                         domainInformation=row.get('Domain Information', ''),
-#                         image=row.get('Image', ''),
-#                         longDescription=row.get('Long Description', ''),
-#                         summary=row.get('Summary', ''),
-#                         commonEquipment=row.get('Common Equipment', ''),
-#                         commonProcesses=row.get('Common Processes', ''),
-#                         commonOperations=row.get('Common Operations', ''),
-#                         customer=row.get('Customer', 'Atomiton'),
-#                         eatId=row.get('EAT ID', ''),
-#                     )
-#                 # Update existing BOT with additional information
-#                 bot = bots[bot_name]
-#                 attributes = [
-#                     ('Description', 'description'),
-#                     ('BOT ID', 'botId'),
-#                     ('BOT Type', 'botType'),
-#                     ('BOT Index', 'botIndex'),
-#                     ('BOT Description', 'botDescription'),
-#                     ('Domain Information', 'domainInformation'),
-#                     ('Image', 'image'),
-#                     ('Long Description', 'longDescription'),
-#                     ('Summary', 'summary'),
-#                     ('Common Equipment', 'commonEquipment'),
-#                     ('Common Processes', 'commonProcesses'),
-#                     ('Common Operations', 'commonOperations'),
-#                     ('Customer', 'customer'),
-#                     ('EAT ID', 'eatId')
-#                 ]
-#                 for column, attr in attributes:
-#                     if pd.notna(row.get(column)):
-#                         setattr(bot, attr, row[column])
-
-#     return bots
 def create_bot_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
     bots = {}
@@ -106,71 +55,170 @@ def create_bot_objects_from_excel(file_path):
                         bot[attr] = row[column]
 
     return bots
+
+# def create_bot_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     bots = {}
+
+#     for sheet_name, df in sheets.items():
+#         for _, row in df.iterrows():
+#             # Identify Bot data
+#             bot_name = row.get('BOT Name')
+#             if pd.notna(bot_name):
+#                 bot_name = str(bot_name)
+#                 if bot_name not in bots:
+#                     bots[bot_name] = BotMetadata(
+#                         sysType=row.get('BOT SysType', 0),
+#                         description=row.get('Description', ''),
+#                         botName=bot_name,
+#                         botId=row.get('BOT ID', ''),
+#                         botType=row.get('BOT Type', ''),
+#                         botIndex=row.get('BOT Index', ''),
+#                         botDescription=row.get('BOT Description', ''),
+#                         domainInformation=row.get('Domain Information', ''),
+#                         image=row.get('Image', ''),
+#                         longDescription=row.get('Long Description', ''),
+#                         summary=row.get('Summary', ''),
+#                         commonEquipment=row.get('Common Equipment', ''),
+#                         commonProcesses=row.get('Common Processes', ''),
+#                         commonOperations=row.get('Common Operations', ''),
+#                         customer=row.get('Customer', 'Atomiton'),
+#                         eatId=row.get('EAT ID', ''),
+#                     )
+#                 # Update existing BOT with additional information
+#                 bot = bots[bot_name]
+#                 attributes = [
+#                     ('Description', 'description'),
+#                     ('BOT ID', 'botId'),
+#                     ('BOT Type', 'botType'),
+#                     ('BOT Index', 'botIndex'),
+#                     ('BOT Description', 'botDescription'),
+#                     ('Domain Information', 'domainInformation'),
+#                     ('Image', 'image'),
+#                     ('Long Description', 'longDescription'),
+#                     ('Summary', 'summary'),
+#                     ('Common Equipment', 'commonEquipment'),
+#                     ('Common Processes', 'commonProcesses'),
+#                     ('Common Operations', 'commonOperations'),
+#                     ('Customer', 'customer'),
+#                     ('EAT ID', 'eatId')
+#                 ]
+#                 for column, attr in attributes:
+#                     if pd.notna(row.get(column)):
+#                         setattr(bot, attr, row[column])
+
+#     return bots
+
+
 def create_pod_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
     pods = {}
 
     for sheet_name, df in sheets.items():
-        pod_name_column = None
-        
-        # Find the column with "POD Name"
-        for column in df.columns:
-            if df[column].astype(str).str.contains("POD Name", na=False).any():
-                pod_name_column = column
-                break
-        if pod_name_column is None:
-            continue  # No POD Name column found in this sheet, skip to next sheet
-        
-        # Get the index of the row where "POD Name" appears
-        pod_start_index = df[df[pod_name_column].astype(str).str.contains("POD Name", na=False)].index[0] + 1
-        
-        # Iterate through rows starting from the row below "POD Name"
-        for _, row in df[pod_start_index:].iterrows():
-            pod_name = row[pod_name_column]
+        for _, row in df.iterrows():
+            # Identify Pod data
+            pod_name = row.get('POD Name')
             if pd.notna(pod_name):
                 pod_name = str(pod_name)
                 if pod_name not in pods:
-                    pods[pod_name] = PodMetadata(
-                        sysType=row.get('POD SysType', 0),
-                        description=row.get('Description', ''),
-                        carbonSource=row.get('Carbon Source', ''),
-                        podName=pod_name,
-                        customer=row.get('Customer', 'Atomiton'),
-                        podCategory=row.get('POD Category', ''),
-                        usability=row.get('Usability', ''),
-                        domainInformation=row.get('Domain Information', ''),
-                        image=row.get('Image', ''),
-                        countrySpecific=row.get('Country Specific', ''),
-                        referenceYear=row.get('Reference Year', ''),
-                    )
+                    pods[pod_name] = {
+                        'sysType': row.get('POD SysType', 0),
+                        'description': row.get('Description', ''),
+                        'carbonSource': row.get('Carbon Source', ''),
+                        'podName': pod_name,
+                        'customer': row.get('Customer', 'Atomiton'),
+                        'podCategory': row.get('POD Category', ''),
+                        'usability': row.get('Usability', ''),
+                        'domainInformation': row.get('Domain Information', ''),
+                        'image': row.get('Image', ''),
+                        'countrySpecific': row.get('Country Specific', ''),
+                        'referenceYear': row.get('Reference Year', '')
+                    }
                 # Update existing POD with additional information
                 pod = pods[pod_name]
-                for col in df.columns:
-                    if pd.notna(row[col]):
-                        column_name = col.strip()
-                        value = row[col]
-                        if column_name == 'POD SysType':
-                            pod.sysType = value
-                        elif column_name == 'Description':
-                            pod.description = value
-                        elif column_name == 'Carbon Source':
-                            pod.carbonSource = value
-                        elif column_name == 'Customer':
-                            pod.customer = value
-                        elif column_name == 'POD Category':
-                            pod.podCategory = value
-                        elif column_name == 'Usability':
-                            pod.usability = value
-                        elif column_name == 'Domain Information':
-                            pod.domainInformation = value
-                        elif column_name == 'Image':
-                            pod.image = value
-                        elif column_name == 'Country Specific':
-                            pod.countrySpecific = value
-                        elif column_name == 'Reference Year':
-                            pod.referenceYear = value
+                attributes = [
+                    ('Description', 'description'),
+                    ('POD SysType', 'sysType'),
+                    ('Carbon Source', 'carbonSource'),
+                    ('Customer', 'customer'),
+                    ('POD Category', 'podCategory'),
+                    ('Usability', 'usability'),
+                    ('Domain Information', 'domainInformation'),
+                    ('Image', 'image'),
+                    ('Country Specific', 'countrySpecific'),
+                    ('Reference Year', 'referenceYear')
+                ]
+                for column, attr in attributes:
+                    if pd.notna(row.get(column)):
+                        pod[attr] = row[column]
 
     return pods
+
+# def create_pod_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     pods = {}
+
+#     for sheet_name, df in sheets.items():
+#         pod_name_column = None
+        
+#         # Find the column with "POD Name"
+#         for column in df.columns:
+#             if df[column].astype(str).str.contains("POD Name", na=False).any():
+#                 pod_name_column = column
+#                 break
+#         if pod_name_column is None:
+#             continue  # No POD Name column found in this sheet, skip to next sheet
+        
+#         # Get the index of the row where "POD Name" appears
+#         pod_start_index = df[df[pod_name_column].astype(str).str.contains("POD Name", na=False)].index[0] + 1
+        
+#         # Iterate through rows starting from the row below "POD Name"
+#         for _, row in df[pod_start_index:].iterrows():
+#             pod_name = row[pod_name_column]
+#             if pd.notna(pod_name):
+#                 pod_name = str(pod_name)
+#                 if pod_name not in pods:
+#                     pods[pod_name] = PodMetadata(
+#                         sysType=row.get('POD SysType', 0),
+#                         description=row.get('Description', ''),
+#                         carbonSource=row.get('Carbon Source', ''),
+#                         podName=pod_name,
+#                         customer=row.get('Customer', 'Atomiton'),
+#                         podCategory=row.get('POD Category', ''),
+#                         usability=row.get('Usability', ''),
+#                         domainInformation=row.get('Domain Information', ''),
+#                         image=row.get('Image', ''),
+#                         countrySpecific=row.get('Country Specific', ''),
+#                         referenceYear=row.get('Reference Year', ''),
+#                     )
+#                 # Update existing POD with additional information
+#                 pod = pods[pod_name]
+#                 for col in df.columns:
+#                     if pd.notna(row[col]):
+#                         column_name = col.strip()
+#                         value = row[col]
+#                         if column_name == 'POD SysType':
+#                             pod.sysType = value
+#                         elif column_name == 'Description':
+#                             pod.description = value
+#                         elif column_name == 'Carbon Source':
+#                             pod.carbonSource = value
+#                         elif column_name == 'Customer':
+#                             pod.customer = value
+#                         elif column_name == 'POD Category':
+#                             pod.podCategory = value
+#                         elif column_name == 'Usability':
+#                             pod.usability = value
+#                         elif column_name == 'Domain Information':
+#                             pod.domainInformation = value
+#                         elif column_name == 'Image':
+#                             pod.image = value
+#                         elif column_name == 'Country Specific':
+#                             pod.countrySpecific = value
+#                         elif column_name == 'Reference Year':
+#                             pod.referenceYear = value
+
+#     return pods
 
 def create_eat_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
@@ -179,32 +227,32 @@ def create_eat_objects_from_excel(file_path):
     for sheet_name, df in sheets.items():
         for _, row in df.iterrows():
             # Identify EAT data
-            eatName = row.get('EAT Name')
-            if pd.notna(eatName):
-                eatName = str(eatName) 
-                if eatName not in eats:
-                    eats[eatName] = EatMetadata(
-                        sysType=row.get('EAT SysType', 0),
-                        description=row.get('Description', ''),
-                        eatName=row.get('EAT Name', ''),
-                        eatFullName=row.get('#EAT Full Name', ''),
-                        ghgAmFullName=row.get('#GHG-AM Full Name', ''),
-                        ghgAmName=row.get('GHG-AM Name', ''),
-                        mdDescription=row.get('MD Description', ''),
-                        methodologyName=row.get('Methodology Name', ''),
-                        carbonSource=row.get('Carbon Source', ''),
-                        action=row.get('Action', ''),
-                        activityDescription=row.get('Activity Description', ''),
-                        reportedQuantity=row.get('Reported Quantity', ''),
-                        rqDescription=row.get('Reported Quantity Description', ''),
-                        rqAbbreviation=row.get('RQ Abbreviation', ''),
-                        eaDataSource=row.get('EA Data Source', ''),
-                    )
+            eat_name = row.get('EAT Name')
+            if pd.notna(eat_name):
+                eat_name = str(eat_name)
+                if eat_name not in eats:
+                    eats[eat_name] = {
+                        'sysType': row.get('EAT SysType', 0),
+                        'description': row.get('Description', ''),
+                        'eatName': eat_name,
+                        'eatFullName': row.get('#EAT Full Name', ''),
+                        'ghgAmFullName': row.get('#GHG-AM Full Name', ''),
+                        'ghgAmName': row.get('GHG-AM Name', ''),
+                        'mdDescription': row.get('MD Description', ''),
+                        'methodologyName': row.get('Methodology Name', ''),
+                        'carbonSource': row.get('Carbon Source', ''),
+                        'action': row.get('Action', ''),
+                        'activityDescription': row.get('Activity Description', ''),
+                        'reportedQuantity': row.get('Reported Quantity', ''),
+                        'rqDescription': row.get('Reported Quantity Description', ''),
+                        'rqAbbreviation': row.get('RQ Abbreviation', ''),
+                        'eaDataSource': row.get('EA Data Source', '')
+                    }
                 # Update existing EAT with additional information
-                eat = eats[eatName]
+                eat = eats[eat_name]
                 attributes = [
-                    ('EAT SysType', 'sysType'),
                     ('Description', 'description'),
+                    ('EAT SysType', 'sysType'),
                     ('#EAT Full Name', 'eatFullName'),
                     ('#GHG-AM Full Name', 'ghgAmFullName'),
                     ('GHG-AM Name', 'ghgAmName'),
@@ -220,9 +268,61 @@ def create_eat_objects_from_excel(file_path):
                 ]
                 for column, attr in attributes:
                     if pd.notna(row.get(column)):
-                        setattr(eat, attr, row[column])
+                        eat[attr] = row[column]
 
     return eats
+
+# def create_eat_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     eats = {}
+
+#     for sheet_name, df in sheets.items():
+#         for _, row in df.iterrows():
+#             # Identify EAT data
+#             eatName = row.get('EAT Name')
+#             if pd.notna(eatName):
+#                 eatName = str(eatName) 
+#                 if eatName not in eats:
+#                     eats[eatName] = EatMetadata(
+#                         sysType=row.get('EAT SysType', 0),
+#                         description=row.get('Description', ''),
+#                         eatName=row.get('EAT Name', ''),
+#                         eatFullName=row.get('#EAT Full Name', ''),
+#                         ghgAmFullName=row.get('#GHG-AM Full Name', ''),
+#                         ghgAmName=row.get('GHG-AM Name', ''),
+#                         mdDescription=row.get('MD Description', ''),
+#                         methodologyName=row.get('Methodology Name', ''),
+#                         carbonSource=row.get('Carbon Source', ''),
+#                         action=row.get('Action', ''),
+#                         activityDescription=row.get('Activity Description', ''),
+#                         reportedQuantity=row.get('Reported Quantity', ''),
+#                         rqDescription=row.get('Reported Quantity Description', ''),
+#                         rqAbbreviation=row.get('RQ Abbreviation', ''),
+#                         eaDataSource=row.get('EA Data Source', ''),
+#                     )
+#                 # Update existing EAT with additional information
+#                 eat = eats[eatName]
+#                 attributes = [
+#                     ('EAT SysType', 'sysType'),
+#                     ('Description', 'description'),
+#                     ('#EAT Full Name', 'eatFullName'),
+#                     ('#GHG-AM Full Name', 'ghgAmFullName'),
+#                     ('GHG-AM Name', 'ghgAmName'),
+#                     ('MD Description', 'mdDescription'),
+#                     ('Methodology Name', 'methodologyName'),
+#                     ('Carbon Source', 'carbonSource'),
+#                     ('Action', 'action'),
+#                     ('Activity Description', 'activityDescription'),
+#                     ('Reported Quantity', 'reportedQuantity'),
+#                     ('Reported Quantity Description', 'rqDescription'),
+#                     ('RQ Abbreviation', 'rqAbbreviation'),
+#                     ('EA Data Source', 'eaDataSource')
+#                 ]
+#                 for column, attr in attributes:
+#                     if pd.notna(row.get(column)):
+#                         setattr(eat, attr, row[column])
+
+#     return eats
 
 def create_dm_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
@@ -231,28 +331,28 @@ def create_dm_objects_from_excel(file_path):
     for sheet_name, df in sheets.items():
         for _, row in df.iterrows():
             # Identify DM data
-            dm_id = row.get('DM ID') or row.get('DM')
-            if pd.notna(dm_id):
-                dm_id = str(dm_id)
-                if dm_id not in dms:
-                    dms[dm_id] = DmMetadata(
-                        sysType=row.get('DM SysType', 0),
-                        description=row.get('Description', ''),
-                        dmType=row.get('DM Type', ''),
-                        formula=row.get('Formula', ''),
-                        notations=row.get('Notations', ''),
-                        additionalVariables=row.get('Additional Variables', ''),
-                        dmPref=row.get('DM Pref', None),
-                        condition1=row.get('Condition 1', ''),
-                        condition2=row.get('Condition 2', ''),
-                        condition3=row.get('Condition 3', ''),
-                        notes=row.get('Notes', ''),
-                    )
+            dm_name = row.get('DM ID') or row.get('DM')
+            if pd.notna(dm_name):
+                dm_name = str(dm_name)
+                if dm_name not in dms:
+                    dms[dm_name] = {
+                        'sysType': row.get('DM SysType', 0),
+                        'description': row.get('Description', ''),
+                        'dmType': row.get('DM Type', ''),
+                        'formula': row.get('Formula', ''),
+                        'notations': row.get('Notations', ''),
+                        'additionalVariables': row.get('Additional Variables', ''),
+                        'dmPref': row.get('DM Pref', None),
+                        'condition1': row.get('Condition 1', ''),
+                        'condition2': row.get('Condition 2', ''),
+                        'condition3': row.get('Condition 3', ''),
+                        'notes': row.get('Notes', '')
+                    }
                 # Update existing DM with additional information
-                dm = dms[dm_id]
+                dm = dms[dm_name]
                 attributes = [
-                    ('DM SysType', 'sysType'),
                     ('Description', 'description'),
+                    ('DM SysType', 'sysType'),
                     ('DM Type', 'dmType'),
                     ('Formula', 'formula'),
                     ('Notations', 'notations'),
@@ -265,10 +365,54 @@ def create_dm_objects_from_excel(file_path):
                 ]
                 for column, attr in attributes:
                     if pd.notna(row.get(column)):
-                        setattr(dm, attr, row[column])
+                        dm[attr] = row[column]
 
     return dms
 
+# def create_dm_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     dms = {}
+
+#     for sheet_name, df in sheets.items():
+#         for _, row in df.iterrows():
+#             # Identify DM data
+#             dm_id = row.get('DM ID') or row.get('DM')
+#             if pd.notna(dm_id):
+#                 dm_id = str(dm_id)
+#                 if dm_id not in dms:
+#                     dms[dm_id] = DmMetadata(
+#                         sysType=row.get('DM SysType', 0),
+#                         description=row.get('Description', ''),
+#                         dmType=row.get('DM Type', ''),
+#                         formula=row.get('Formula', ''),
+#                         notations=row.get('Notations', ''),
+#                         additionalVariables=row.get('Additional Variables', ''),
+#                         dmPref=row.get('DM Pref', None),
+#                         condition1=row.get('Condition 1', ''),
+#                         condition2=row.get('Condition 2', ''),
+#                         condition3=row.get('Condition 3', ''),
+#                         notes=row.get('Notes', ''),
+#                     )
+#                 # Update existing DM with additional information
+#                 dm = dms[dm_id]
+#                 attributes = [
+#                     ('DM SysType', 'sysType'),
+#                     ('Description', 'description'),
+#                     ('DM Type', 'dmType'),
+#                     ('Formula', 'formula'),
+#                     ('Notations', 'notations'),
+#                     ('Additional Variables', 'additionalVariables'),
+#                     ('DM Pref', 'dmPref'),
+#                     ('Condition 1', 'condition1'),
+#                     ('Condition 2', 'condition2'),
+#                     ('Condition 3', 'condition3'),
+#                     ('Notes', 'notes')
+#                 ]
+#                 for column, attr in attributes:
+#                     if pd.notna(row.get(column)):
+#                         setattr(dm, attr, row[column])
+
+#     return dms
 def create_bart_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
     barts = {}
@@ -280,27 +424,27 @@ def create_bart_objects_from_excel(file_path):
             if pd.notna(bart_name):
                 bart_name = str(bart_name)
                 if bart_name not in barts:
-                    barts[bart_name] = BartMetadata(
-                        sysType=row.get('BART SysType', 0),
-                        description=row.get('Description', ''),
-                        bartFullName=row.get('#BART Full Name', ''),
-                        carbonSource=row.get('Carbon Source', ''),
-                        carbonSourceLifecycle=row.get('Carbon Source', ''),
-                        activityDescription=row.get('Activity Description', ''),
-                        measuredQuantity=row.get('Measured Quantity', ''),
-                        measuredQuantityType=row.get('Measured Quantity Type', ''),
-                        mqDescription=row.get('Measured Quantity Description', ''),
-                        mqAbbreviation=row.get('MQ Abbreviation', ''),
-                        unitAllowedValues=row.get('Unit Allowed Values', ''),
-                    )
+                    barts[bart_name] = {
+                        'sysType': row.get('BART SysType', 0),
+                        'description': row.get('Description', ''),
+                        'bartFullName': row.get('#BART Full Name', ''),
+                        'carbonSource': row.get('Carbon Source', ''),
+                        'carbonSourceLifecycle': row.get('Carbon Source Lifecycle', ''),
+                        'activityDescription': row.get('Activity Description', ''),
+                        'measuredQuantity': row.get('Measured Quantity', ''),
+                        'measuredQuantityType': row.get('Measured Quantity Type', ''),
+                        'mqDescription': row.get('Measured Quantity Description', ''),
+                        'mqAbbreviation': row.get('MQ Abbreviation', ''),
+                        'unitAllowedValues': row.get('Unit Allowed Values', '')
+                    }
                 # Update existing BART with additional information
                 bart = barts[bart_name]
                 attributes = [
-                    ('BART SysType', 'sysType'),
                     ('Description', 'description'),
+                    ('BART SysType', 'sysType'),
                     ('#BART Full Name', 'bartFullName'),
                     ('Carbon Source', 'carbonSource'),
-                    ('Carbon Source', 'carbonSourceLifecycle'),
+                    ('Carbon Source Lifecycle', 'carbonSourceLifecycle'),
                     ('Activity Description', 'activityDescription'),
                     ('Measured Quantity', 'measuredQuantity'),
                     ('Measured Quantity Type', 'measuredQuantityType'),
@@ -310,9 +454,53 @@ def create_bart_objects_from_excel(file_path):
                 ]
                 for column, attr in attributes:
                     if pd.notna(row.get(column)):
-                        setattr(bart, attr, row[column])
+                        bart[attr] = row[column]
 
     return barts
+# def create_bart_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     barts = {}
+
+#     for sheet_name, df in sheets.items():
+#         for _, row in df.iterrows():
+#             # Identify BART data
+#             bart_name = row.get('BART ID')
+#             if pd.notna(bart_name):
+#                 bart_name = str(bart_name)
+#                 if bart_name not in barts:
+#                     barts[bart_name] = BartMetadata(
+#                         sysType=row.get('BART SysType', 0),
+#                         description=row.get('Description', ''),
+#                         bartFullName=row.get('#BART Full Name', ''),
+#                         carbonSource=row.get('Carbon Source', ''),
+#                         carbonSourceLifecycle=row.get('Carbon Source', ''),
+#                         activityDescription=row.get('Activity Description', ''),
+#                         measuredQuantity=row.get('Measured Quantity', ''),
+#                         measuredQuantityType=row.get('Measured Quantity Type', ''),
+#                         mqDescription=row.get('Measured Quantity Description', ''),
+#                         mqAbbreviation=row.get('MQ Abbreviation', ''),
+#                         unitAllowedValues=row.get('Unit Allowed Values', ''),
+#                     )
+#                 # Update existing BART with additional information
+#                 bart = barts[bart_name]
+#                 attributes = [
+#                     ('BART SysType', 'sysType'),
+#                     ('Description', 'description'),
+#                     ('#BART Full Name', 'bartFullName'),
+#                     ('Carbon Source', 'carbonSource'),
+#                     ('Carbon Source', 'carbonSourceLifecycle'),
+#                     ('Activity Description', 'activityDescription'),
+#                     ('Measured Quantity', 'measuredQuantity'),
+#                     ('Measured Quantity Type', 'measuredQuantityType'),
+#                     ('Measured Quantity Description', 'mqDescription'),
+#                     ('MQ Abbreviation', 'mqAbbreviation'),
+#                     ('Unit Allowed Values', 'unitAllowedValues')
+#                 ]
+#                 for column, attr in attributes:
+#                     if pd.notna(row.get(column)):
+#                         setattr(bart, attr, row[column])
+
+#     return barts
 def print_bart(barts):
     for bart_name, bart in barts.items():
         print(f"BART Name: {bart_name}")

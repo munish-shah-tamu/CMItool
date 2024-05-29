@@ -1,5 +1,5 @@
 import argparse
-from pprint import pprint
+import pprint
 from ModelRepresentation import BotMetadata, PodMetadata, EatMetadata, DmMetadata, BartMetadata
 from SheetParser import parse_excel_sheets
 from SheetModelMapping import create_bot_objects_from_excel, create_pod_objects_from_excel, create_eat_objects_from_excel, create_dm_objects_from_excel, create_bart_objects_from_excel
@@ -13,25 +13,44 @@ eats = create_eat_objects_from_excel(file_path)
 dms = create_dm_objects_from_excel(file_path)
 barts = create_bart_objects_from_excel(file_path)
 
-def list_all_objects(obj_dict, obj_type):
-    print(f"All {obj_type}s:")
-    for name in obj_dict.keys():
+# def list_all_objects(obj_dict, obj_type):
+#     print(f"All {obj_type}s:")
+#     for name in obj_dict.keys():
+#         print(name)
+
+# def list_all_details(obj_dict, obj_type):
+#     print(f"All {obj_type} Details:")
+#     for obj_name, obj in obj_dict.items():
+#         print(f"{obj_type} Name: {obj_name}")
+#         pprint(vars(obj), indent=2)
+#         print("\n")
+
+# def list_details_by_name(obj_dict, name, obj_type):
+#     obj = obj_dict.get(name)
+#     if obj:
+#         print(f"{obj_type} Details for '{name}':")
+#         pprint(vars(obj), indent=2)
+#     else:
+#         print(f"{obj_type} '{name}' not found.")
+
+def list_all_objects(objects_dict, object_type):
+    print(f"All {object_type} Names:")
+    for name in objects_dict.keys():
         print(name)
 
-def list_all_details(obj_dict, obj_type):
-    print(f"All {obj_type} Details:")
-    for obj_name, obj in obj_dict.items():
-        print(f"{obj_type} Name: {obj_name}")
-        pprint(vars(obj), indent=2)
-        print("\n")
+def list_all_details(objects_dict, object_type):
+    print(f"All {object_type} Details:")
+    for name, obj in objects_dict.items():
+        print(f"{object_type} Name: {name}")
+        pprint.pprint(obj, indent=2)
+        print()
 
-def list_details_by_name(obj_dict, name, obj_type):
-    obj = obj_dict.get(name)
-    if obj:
-        print(f"{obj_type} Details for '{name}':")
-        pprint(vars(obj), indent=2)
+def list_details_by_name(objects_dict, name, object_type):
+    if name in objects_dict:
+        print(f"{object_type} Details for '{name}':")
+        pprint.pprint(objects_dict[name], indent=2)
     else:
-        print(f"{obj_type} '{name}' not found.")
+        print(f"{name} '{object_type}' not found.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CLI for managing BOTs, PODs, EATs, DMs, and BARTs.")
