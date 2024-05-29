@@ -4,11 +4,10 @@ def parse_excel_sheets(file_path):
     # Read the Excel file
     xls = pd.ExcelFile(file_path)
     
-    # Dictionary to store dataframes for each sheet
+    # Dictionary to store dataframes for each sheet, ignoring the first sheet
     sheet_dict = {}
     
-    # Iterate through each sheet and store the data in the dictionary
-    for sheet_name in xls.sheet_names:
+    for sheet_name in xls.sheet_names[1:]:  # Start from the second sheet
         sheet_dict[sheet_name] = pd.read_excel(xls, sheet_name=sheet_name)
     
     return sheet_dict
