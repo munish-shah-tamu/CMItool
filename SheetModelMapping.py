@@ -2,6 +2,58 @@ import pandas as pd
 from ModelRepresentation import BotMetadata, PodMetadata, EatMetadata, DmMetadata, BartMetadata
 from SheetParser import parse_excel_sheets
 
+# def create_bot_objects_from_excel(file_path):
+#     sheets = parse_excel_sheets(file_path)
+#     bots = {}
+
+#     for sheet_name, df in sheets.items():
+#         for _, row in df.iterrows():
+#             # Identify Bot data
+#             bot_name = row.get('BOT Name')
+#             if pd.notna(bot_name):
+#                 bot_name = str(bot_name)
+#                 if bot_name not in bots:
+#                     bots[bot_name] = BotMetadata(
+#                         sysType=row.get('BOT SysType', 0),
+#                         description=row.get('Description', ''),
+#                         botName=bot_name,
+#                         botId=row.get('BOT ID', ''),
+#                         botType=row.get('BOT Type', ''),
+#                         botIndex=row.get('BOT Index', ''),
+#                         botDescription=row.get('BOT Description', ''),
+#                         domainInformation=row.get('Domain Information', ''),
+#                         image=row.get('Image', ''),
+#                         longDescription=row.get('Long Description', ''),
+#                         summary=row.get('Summary', ''),
+#                         commonEquipment=row.get('Common Equipment', ''),
+#                         commonProcesses=row.get('Common Processes', ''),
+#                         commonOperations=row.get('Common Operations', ''),
+#                         customer=row.get('Customer', 'Atomiton'),
+#                         eatId=row.get('EAT ID', ''),
+#                     )
+#                 # Update existing BOT with additional information
+#                 bot = bots[bot_name]
+#                 attributes = [
+#                     ('Description', 'description'),
+#                     ('BOT ID', 'botId'),
+#                     ('BOT Type', 'botType'),
+#                     ('BOT Index', 'botIndex'),
+#                     ('BOT Description', 'botDescription'),
+#                     ('Domain Information', 'domainInformation'),
+#                     ('Image', 'image'),
+#                     ('Long Description', 'longDescription'),
+#                     ('Summary', 'summary'),
+#                     ('Common Equipment', 'commonEquipment'),
+#                     ('Common Processes', 'commonProcesses'),
+#                     ('Common Operations', 'commonOperations'),
+#                     ('Customer', 'customer'),
+#                     ('EAT ID', 'eatId')
+#                 ]
+#                 for column, attr in attributes:
+#                     if pd.notna(row.get(column)):
+#                         setattr(bot, attr, row[column])
+
+#     return bots
 def create_bot_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
     bots = {}
@@ -13,24 +65,24 @@ def create_bot_objects_from_excel(file_path):
             if pd.notna(bot_name):
                 bot_name = str(bot_name)
                 if bot_name not in bots:
-                    bots[bot_name] = BotMetadata(
-                        sysType=row.get('BOT SysType', 0),
-                        description=row.get('Description', ''),
-                        botName=bot_name,
-                        botId=row.get('BOT ID', ''),
-                        botType=row.get('BOT Type', ''),
-                        botIndex=row.get('BOT Index', ''),
-                        botDescription=row.get('BOT Description', ''),
-                        domainInformation=row.get('Domain Information', ''),
-                        image=row.get('Image', ''),
-                        longDescription=row.get('Long Description', ''),
-                        summary=row.get('Summary', ''),
-                        commonEquipment=row.get('Common Equipment', ''),
-                        commonProcesses=row.get('Common Processes', ''),
-                        commonOperations=row.get('Common Operations', ''),
-                        customer=row.get('Customer', 'Atomiton'),
-                        eatId=row.get('EAT ID', ''),
-                    )
+                    bots[bot_name] = {
+                        'sysType': row.get('BOT SysType', 0),
+                        'description': row.get('Description', ''),
+                        'botName': bot_name,
+                        'botId': row.get('BOT ID', ''),
+                        'botType': row.get('BOT Type', ''),
+                        'botIndex': row.get('BOT Index', ''),
+                        'botDescription': row.get('BOT Description', ''),
+                        'domainInformation': row.get('Domain Information', ''),
+                        'image': row.get('Image', ''),
+                        'longDescription': row.get('Long Description', ''),
+                        'summary': row.get('Summary', ''),
+                        'commonEquipment': row.get('Common Equipment', ''),
+                        'commonProcesses': row.get('Common Processes', ''),
+                        'commonOperations': row.get('Common Operations', ''),
+                        'customer': row.get('Customer', 'Atomiton'),
+                        'eatId': row.get('EAT ID', '')
+                    }
                 # Update existing BOT with additional information
                 bot = bots[bot_name]
                 attributes = [
@@ -51,10 +103,9 @@ def create_bot_objects_from_excel(file_path):
                 ]
                 for column, attr in attributes:
                     if pd.notna(row.get(column)):
-                        setattr(bot, attr, row[column])
+                        bot[attr] = row[column]
 
     return bots
-
 def create_pod_objects_from_excel(file_path):
     sheets = parse_excel_sheets(file_path)
     pods = {}
@@ -401,7 +452,8 @@ if __name__ == "__main__":
     # Print all DMs
     # print_dm(dms)
     # Print all EATs
-    print_eat(eats)
+    # print_eat(eats)
+    print(bots)
     # # Print all BOT names
     # print("All BOT Names:")
     # for bot_name in bots:
