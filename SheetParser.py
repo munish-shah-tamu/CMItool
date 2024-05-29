@@ -1,10 +1,11 @@
 import pandas as pd
+import warnings
+from openpyxl import load_workbook
 
 def parse_excel_sheets(file_path):
     # Read the Excel file
     xls = pd.ExcelFile(file_path)
-    
-    # Dictionary to store dataframes for each sheet, ignoring the first sheet
+    warnings.filterwarnings("ignore", category=UserWarning, module='openpyxl')
     sheet_dict = {}
     
     for sheet_name in xls.sheet_names[1:]:  # Start from the second sheet

@@ -128,11 +128,11 @@ def create_eat_objects_from_excel(file_path):
     for sheet_name, df in sheets.items():
         for _, row in df.iterrows():
             # Identify EAT data
-            eat_id = row.get('EAT ID')
-            if pd.notna(eat_id):
-                eat_id = str(eat_id)
-                if eat_id not in eats:
-                    eats[eat_id] = EatMetadata(
+            eatName = row.get('EAT Name')
+            if pd.notna(eatName):
+                eatName = str(eatName) 
+                if eatName not in eats:
+                    eats[eatName] = EatMetadata(
                         sysType=row.get('EAT SysType', 0),
                         description=row.get('Description', ''),
                         eatName=row.get('EAT Name', ''),
@@ -150,7 +150,7 @@ def create_eat_objects_from_excel(file_path):
                         eaDataSource=row.get('EA Data Source', ''),
                     )
                 # Update existing EAT with additional information
-                eat = eats[eat_id]
+                eat = eats[eatName]
                 attributes = [
                     ('EAT SysType', 'sysType'),
                     ('Description', 'description'),
@@ -397,11 +397,11 @@ if __name__ == "__main__":
     barts = create_bart_objects_from_excel(file_path)
     
     # Print all BARTs
-    print_bart(barts)
+    # print_bart(barts)
     # Print all DMs
     # print_dm(dms)
     # Print all EATs
-    # print_eat(eats)
+    print_eat(eats)
     # # Print all BOT names
     # print("All BOT Names:")
     # for bot_name in bots:

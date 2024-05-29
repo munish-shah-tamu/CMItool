@@ -1,4 +1,5 @@
 import argparse
+from pprint import pprint
 from ModelRepresentation import BotMetadata, PodMetadata, EatMetadata, DmMetadata, BartMetadata
 from SheetParser import parse_excel_sheets
 from SheetModelMapping import create_bot_objects_from_excel, create_pod_objects_from_excel, create_eat_objects_from_excel, create_dm_objects_from_excel, create_bart_objects_from_excel
@@ -19,13 +20,16 @@ def list_all_objects(obj_dict, obj_type):
 
 def list_all_details(obj_dict, obj_type):
     print(f"All {obj_type} Details:")
-    for obj in obj_dict.values():
-        print(vars(obj))
+    for obj_name, obj in obj_dict.items():
+        print(f"{obj_type} Name: {obj_name}")
+        pprint(vars(obj), indent=2)
+        print("\n")
 
 def list_details_by_name(obj_dict, name, obj_type):
     obj = obj_dict.get(name)
     if obj:
-        print(vars(obj))
+        print(f"{obj_type} Details for '{name}':")
+        pprint(vars(obj), indent=2)
     else:
         print(f"{obj_type} '{name}' not found.")
 
@@ -36,48 +40,56 @@ if __name__ == "__main__":
 
     # Define commands for listing all names
     list_parser = subparsers.add_parser("list", help="List all names of a given type.")
-    list_parser.add_argument("--X", type=str, choices=["BOT", "POD", "EAT", "DM", "BART"], required=True, help="Specify the type of object.")
+    list_parser.add_argument("--BOT", action='store_true', help="List all BOT names.")
+    list_parser.add_argument("--POD", action='store_true', help="List all POD names.")
+    list_parser.add_argument("--EAT", action='store_true', help="List all EAT names.")
+    list_parser.add_argument("--DM", action='store_true', help="List all DM names.")
+    list_parser.add_argument("--BART", action='store_true', help="List all BART names.")
     
     # Define commands for listing all details
     listdetails_parser = subparsers.add_parser("listdetails", help="List all details of a given type or details of a specific name.")
-    listdetails_parser.add_argument("--X", type=str, choices=["BOT", "POD", "EAT", "DM", "BART"], required=True, help="Specify the type of object.")
+    listdetails_parser.add_argument("--BOT", action='store_true', help="List all BOT details.")
+    listdetails_parser.add_argument("--POD", action='store_true', help="List all POD details.")
+    listdetails_parser.add_argument("--EAT", action='store_true', help="List all EAT details.")
+    listdetails_parser.add_argument("--DM", action='store_true', help="List all DM details.")
+    listdetails_parser.add_argument("--BART", action='store_true', help="List all BART details.")
     listdetails_parser.add_argument("name", nargs='?', type=str, help="The name of the object (optional).")
 
     args = parser.parse_args()
 
     if args.command == "list":
-        if args.X == "BOT":
+        if args.BOT:
             list_all_objects(bots, "BOT")
-        elif args.X == "POD":
+        elif args.POD:
             list_all_objects(pods, "POD")
-        elif args.X == "EAT":
+        elif args.EAT:
             list_all_objects(eats, "EAT")
-        elif args.X == "DM":
+        elif args.DM:
             list_all_objects(dms, "DM")
-        elif args.X == "BART":
+        elif args.BART:
             list_all_objects(barts, "BART")
     elif args.command == "listdetails":
         if args.name:
-            if args.X == "BOT":
+            if args.BOT:
                 list_details_by_name(bots, args.name, "BOT")
-            elif args.X == "POD":
+            elif args.POD:
                 list_details_by_name(pods, args.name, "POD")
-            elif args.X == "EAT":
+            elif args.EAT:
                 list_details_by_name(eats, args.name, "EAT")
-            elif args.X == "DM":
+            elif args.DM:
                 list_details_by_name(dms, args.name, "DM")
-            elif args.X == "BART":
+            elif args.BART:
                 list_details_by_name(barts, args.name, "BART")
         else:
-            if args.X == "BOT":
+            if args.BOT:
                 list_all_details(bots, "BOT")
-            elif args.X == "POD":
+            elif args.POD:
                 list_all_details(pods, "POD")
-            elif args.X == "EAT":
+            elif args.EAT:
                 list_all_details(eats, "EAT")
-            elif args.X == "DM":
+            elif args.DM:
                 list_all_details(dms, "DM")
-            elif args.X == "BART":
+            elif args.BART:
                 list_all_details(barts, "BART")
     else:
         parser.print_help()

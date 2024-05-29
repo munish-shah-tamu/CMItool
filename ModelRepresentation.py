@@ -290,7 +290,6 @@ class GhgAmMetadata(GhgAmMetadataType):
 # Import necessary modules
 # Assuming the classes are defined in a file named `data_models.py`
 # from data_models import AttachmentType, TreeCategoryNodeType, MetadataType, MetadataAttachmentType, BartAttachmentType, BartSpecifierType, BartQualifierType, BartMetadataType, AdditionalVariableType, DmMetadataType, EatAttachmentType, EatSpecifierType, EatQualifierType, EatMetadataType, PodGhgAmMappingType, MetadataAnnotationType, PodMetadataType, BotPodMappingType, BotMetadataType, DmBartEatMappingType, BartMetadata, DmMetadata, EatMetadata, PodMetadata, BotMetadata, MetadataAttachment, BartSpecifier, BartQualifier, EatSpecifier, EatQualifier, AdditionalVariable, GhgAmMetadata
-
 # Example usage
 def main():
     # Create instances of each class
